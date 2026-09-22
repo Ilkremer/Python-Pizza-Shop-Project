@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE files
+.idea/
+.vscode/
+
+# Runtime-generated files
+ErrorLog.txt
+Receipts/*.txt
+
+# Operating system files
+.DS_Store
+Thumbs.db

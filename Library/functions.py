@@ -6,7 +6,7 @@ import openpyxl
 from openpyxl import load_workbook
 from itertools import chain
 import xlwings as xw
-
+from pathlib import Path
 
 def order():  # Allows customer to order pizza with desired toppings
     total = 0  # Initializes total as $0
@@ -15,8 +15,8 @@ def order():  # Allows customer to order pizza with desired toppings
     pd.options.display.float_format = '{:.2f}'.format  # Forces prices to be displayed with two decimal places
 
     try:
-        base = pd.read_csv('Prices/Base.csv')  # Opens the files with pricing info
-        toppings = pd.read_csv('Prices/Topping.csv')
+        base = pd.read_csv('prices/Base.csv')  # Opens the files with pricing info
+        toppings = pd.read_csv('prices/Topping.csv')
         base_diction = base.to_dict(orient='records')  # Converts files into lists of dictionaries
         toppings_diction = toppings.to_dict(orient='records')
     except Exception as e:
@@ -66,8 +66,10 @@ def order():  # Allows customer to order pizza with desired toppings
 
     ## Creates receipt for pizza order with title in format name_MM-DD-YYYY_HH.MM.SS.txt ##
     try:
+        receipts_dir = Path("Receipts")
+        receipts_dir.mkdir(exist_ok=True)
         filename = f"{name}_{date.today().strftime('%d-%m-%Y')}_{datetime.now().strftime('%H.%M.%S')}.txt"
-        with open(f'Receipts/{filename}', "w") as file:
+        with open(receipts_dir / filename, "w") as file:
             r_total = "{:.2f}".format(total)  # Ensures total has two decimal places
             s_price = "{:.2f}".format(size_price)  # Ensures base price has two decimal places
             size_name = base_diction[size_int].get("Size")  # Pulls chosen size from designated dictionary
@@ -194,8 +196,8 @@ def individual_restock():  # Restocks individual products based on user request
     try:
         i_wb = load_workbook("pizza.xlsx", data_only=False, keep_links=True)
         i_sh = i_wb["Inventory"]
-        base = pd.read_csv('Prices/Base_raw.csv')  # Opens the files with pricing info
-        toppings = pd.read_csv('Prices/Topping_raw.csv')
+        base = pd.read_csv('prices/Base_raw.csv')  # Opens the files with pricing info
+        toppings = pd.read_csv('prices/Topping_raw.csv')
         base_diction = base.to_dict(orient='records')  # Converts files into lists of dictionaries
         toppings_diction = toppings.to_dict(orient='records')
         acceptable = []
@@ -242,8 +244,8 @@ def full_restock():  # Restocks all stock not at 10
     try:
         i_wb = load_workbook("pizza.xlsx", data_only=False, keep_links=True)
         i_sh = i_wb["Inventory"]
-        base = pd.read_csv('Prices/Base_raw.csv')  # Opens the files with pricing info
-        toppings = pd.read_csv('Prices/Topping_raw.csv')
+        base = pd.read_csv('prices/Base_raw.csv')  # Opens the files with pricing info
+        toppings = pd.read_csv('prices/Topping_raw.csv')
         base_diction = base.to_dict(orient='records')  # Converts files into lists of dictionaries
         toppings_diction = toppings.to_dict(orient='records')
         topping_total = 0
